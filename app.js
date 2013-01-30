@@ -6,6 +6,8 @@ Ext.Loader.setPath({
 //</debug>
 
 Ext.application({
+    models: ["Memo"],
+
     controllers: ["Memo"],
 
     name: 'Memo',
