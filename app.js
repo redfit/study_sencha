@@ -8,6 +8,8 @@ Ext.Loader.setPath({
 Ext.application({
     models: ["Memo"],
 
+    stores: ["Memos"],
+
     controllers: ["Memo"],
 
     name: 'Memo',
