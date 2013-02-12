@@ -14,7 +14,8 @@ Ext.define('Memo.controller.Memo', {
             change: 'onFieldChange'
           },
           'memolist': {
-            itemtap: 'onItemTap'
+            itemtap: 'onItemTap',
+            itemswipe: 'onItemSwipe'
           },
           'button[action=remove]': {
             tap: 'onRemoveButtonTap'
@@ -29,7 +30,7 @@ Ext.define('Memo.controller.Memo', {
 
     onAddButtonTap: function(){
       var record = Ext.create('Memo.model.Memo', {
-        id: Ext.Date.now()
+        id: String(Ext.Date.now());
       });
 
       var form = this.getForm();
@@ -77,5 +78,42 @@ Ext.define('Memo.controller.Memo', {
       store.remove(record);
       store.sync();
       this.getMain().onBackButtonTap();
+    },
+
+    onItemSwipe: function(dataview, ix, target, record, event, options) {
+
+      if (event.direction == "left") {
+        var del = Ext.create("Ext.Button", {
+          ui: "decline",
+          text: "Delete",
+          style: "position:absolute;top: 10px; right: 15px;",
+          handler: function(btn, e) {
+            e.stopEvent();
+            var store = record.stores[0];
+            store.remove(record);
+            store.sync();
+          }
+        });
+        var removeDeleteButton = function() {
+          Ext.Anim.run(del, 'fade', {
+            after: function() {
+              del.destroy();
+            },
+            out: true
+          });
+        };
+
+        del.renderTo(Ext.DomQuery.selectNode(".deleteplaceholder", target.element.dom));
+        dataview.on({
+          single: true,
+          buffer: 250,
+          itemtouchstart: removeDeleteButton
+        });
+        dataview.element.on({
+          single: true,
+          buffer: 250,
+          touchstart: removeDeleteButton
+        });
+      }
     }
 });

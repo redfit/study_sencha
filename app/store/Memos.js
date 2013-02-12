@@ -6,6 +6,6 @@ Ext.define('Memo.store.Memos', {
             type: 'localstorage',
             id: 'memo'
         },
-        autoLoad: true
+        autoLoad: false
     }
 });

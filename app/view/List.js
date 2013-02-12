@@ -3,6 +3,6 @@ Ext.define('Memo.view.List', {
     xtype: 'memolist',
     config: {
         store: 'Memos',
-        itemTpl: '{title}'
+        itemTpl: '<span class="deleteplaceholder">{title}</span>',
     }
 });

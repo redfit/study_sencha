@@ -15,7 +15,8 @@ Ext.application({
     name: 'Memo',
 
     requires: [
-        'Ext.MessageBox'
+        'Ext.MessageBox',
+        'Ext.data.proxy.LocalStorage'
     ],
 
     views: ['Main','List','Form'],
