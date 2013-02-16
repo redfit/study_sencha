@@ -105,6 +105,7 @@ Ext.define('Memo.controller.Memo', {
 
       // 表示アニメーションをかっこ良くしたい
       //   １．左から右に徐々にボタンを表示させたい
+      //       Ext.js 4.1.3ならshowメソッドにアニメーションを指定できる
       //   ２．スマートな書き方はないか
       del.renderTo(Ext.DomQuery.selectNode(".deleteplaceholder", target.element.dom));
       del.show();
