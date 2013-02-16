@@ -14,7 +14,8 @@ Ext.define('Memo.controller.Memo', {
             change: 'onFieldChange'
           },
           'memolist': {
-            itemtap: 'onItemTap',
+            // ダブルタップするとおかしくなるのでシングルにしてみた
+            itemsingletap: 'onItemTap',
             itemswipe: 'onItemSwipe'
           },
           'button[action=remove]': {
@@ -23,14 +24,9 @@ Ext.define('Memo.controller.Memo', {
         }
     },
 
-    //called when the Application is launched, remove if not needed
-    launch: function(app) {
-
-    },
-
     onAddButtonTap: function(){
       var record = Ext.create('Memo.model.Memo', {
-        id: String(Ext.Date.now());
+        id: String(Ext.Date.now())
       });
 
       var form = this.getForm();
@@ -80,40 +76,37 @@ Ext.define('Memo.controller.Memo', {
       this.getMain().onBackButtonTap();
     },
 
+    // スワイプしたあとにボタンが表示されるので
+    // スワイプした途端に表示されるようにしたい
     onItemSwipe: function(dataview, ix, target, record, event, options) {
 
-      if (event.direction == "left") {
-        var del = Ext.create("Ext.Button", {
-          ui: "decline",
-          text: "Delete",
-          style: "position:absolute;top: 10px; right: 15px;",
-          handler: function(btn, e) {
-            e.stopEvent();
-            var store = record.stores[0];
-            store.remove(record);
-            store.sync();
-          }
-        });
-        var removeDeleteButton = function() {
-          Ext.Anim.run(del, 'fade', {
-            after: function() {
-              del.destroy();
-            },
-            out: true
-          });
-        };
-
-        del.renderTo(Ext.DomQuery.selectNode(".deleteplaceholder", target.element.dom));
-        dataview.on({
-          single: true,
-          buffer: 250,
-          itemtouchstart: removeDeleteButton
-        });
-        dataview.element.on({
-          single: true,
-          buffer: 250,
-          touchstart: removeDeleteButton
-        });
+      if(Ext.DomQuery.selectNode(".deleteplaceholder .x-button", target.element.dom)){
+        return;
       }
+
+      var del = Ext.create("Ext.Button", {
+        ui: "decline",
+        text: "Delete",
+        style: "position:absolute;top: 10px; right: 15px; display:none",
+        // ボタンを押すと他のレコードのボタンも消えちゃうのを何とかしたい
+        // レコードを消すと、リストがリフレッシュされちゃうのかな？？
+        handler: function(btn, e) {
+          e.stopEvent();
+          var store = record.stores[0];
+          store.remove(record);
+          store.sync();
+        },
+        listeners:{
+          show: function(){
+            Ext.Anim.run(del, 'slide', {});
+          }
+        }
+      });
+
+      // 表示アニメーションをかっこ良くしたい
+      //   １．左から右に徐々にボタンを表示させたい
+      //   ２．スマートな書き方はないか
+      del.renderTo(Ext.DomQuery.selectNode(".deleteplaceholder", target.element.dom));
+      del.show();
     }
 });

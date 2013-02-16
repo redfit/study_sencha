@@ -15,6 +15,7 @@ Ext.application({
     name: 'Memo',
 
     requires: [
+        'Ext.Anim',
         'Ext.MessageBox',
         'Ext.data.proxy.LocalStorage'
     ],
