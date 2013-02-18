@@ -16,7 +16,7 @@ Ext.define('Memo.controller.Memo', {
           'memolist': {
             // ダブルタップするとおかしくなるのでシングルにしてみた
             itemsingletap: 'onItemTap',
-            itemswipe: 'onItemSwipe'
+            itemtouchmove: 'onItemTouchMove'
           },
           'button[action=remove]': {
             tap: 'onRemoveButtonTap'
@@ -78,7 +78,8 @@ Ext.define('Memo.controller.Memo', {
 
     // スワイプしたあとにボタンが表示されるので
     // スワイプした途端に表示されるようにしたい
-    onItemSwipe: function(dataview, ix, target, record, event, options) {
+    //   出来るようになったが、縦でも表示されちゃうので、横にスワイプした判断方法をどうするか
+    onItemTouchMove: function(dataview, ix, target, record, event, options) {
 
       if(Ext.DomQuery.selectNode(".deleteplaceholder .x-button", target.element.dom)){
         return;
@@ -102,7 +103,7 @@ Ext.define('Memo.controller.Memo', {
           show: function(){
             Ext.Anim.run(del, 'wipe', {
               out: false,
-              duration: 300
+              duration: 500
             });
           }
         }
