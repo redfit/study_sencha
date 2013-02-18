@@ -97,16 +97,19 @@ Ext.define('Memo.controller.Memo', {
           store.sync();
         },
         listeners:{
+          // 想定通り（右から左にだんだん表示）にするためには
+          // outとdurationが肝だった、たどり着くまで長かった・・・
           show: function(){
-            Ext.Anim.run(del, 'slide', {});
+            Ext.Anim.run(del, 'wipe', {
+              out: false,
+              duration: 300
+            });
           }
         }
       });
 
       // 表示アニメーションをかっこ良くしたい
-      //   １．左から右に徐々にボタンを表示させたい
-      //       Ext.js 4.1.3ならshowメソッドにアニメーションを指定できる
-      //   ２．スマートな書き方はないか
+      //   ・スマートな書き方はないか
       del.renderTo(Ext.DomQuery.selectNode(".deleteplaceholder", target.element.dom));
       del.show();
     }
